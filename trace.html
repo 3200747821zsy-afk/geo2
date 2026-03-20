@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>极客跳动 - 引用追踪</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --geek-green: #86d53b; }
+        .sidebar-active { background-color: var(--geek-green) !important; color: white !important; font-weight: bold; border-radius: 6px; }
+        .sub-menu { padding: 0.5rem 1rem 0.5rem 3rem; font-size: 0.85rem; color: #666; display: block; margin: 2px 12px; text-decoration: none; transition: 0.2s; }
+        .sub-menu:hover:not(.sidebar-active) { color: var(--geek-green); background-color: #f8fafc; border-radius: 6px; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800 bg-[#fbfcfd]">
+    <aside class="w-64 bg-white border-r flex flex-col flex-shrink-0">
+        <div class="p-4 border-b font-bold text-sm text-[#86d53b]">极客跳动智算平台</div>
+        <div class="flex-1 py-2">
+            <div class="px-6 py-3 text-xs font-bold text-gray-400">🧭 场景速查</div>
+            <a href="index.html" class="sub-menu">品牌能见度智查</a>
+            <div class="px-6 py-3 text-xs font-bold text-gray-400">✍️ 内容制作</div>
+            <a href="plan.html" class="sub-menu">供给计划</a>
+            <div class="px-6 py-3 text-xs font-bold text-gray-400">🔗 引用追踪</div>
+            <a href="trace.html" class="sub-menu sidebar-active">上传查询报告</a>
+        </div>
+    </aside>
+    <main class="flex-1 p-10 flex items-center justify-center">
+        <div class="w-full max-w-xl text-center">
+            <div class="bg-white border-2 border-dashed border-gray-200 p-16 rounded-3xl">
+                <div class="text-5xl mb-6">🔗</div>
+                <h2 class="text-2xl font-bold mb-4">人工智能引用追踪</h2>
+                <p class="text-gray-400 mb-8">粘贴您的文章链接，实时查看其被 AI 引用的频次</p>
+                <button class="bg-[#86d53b] text-white px-12 py-3 rounded-xl font-bold text-lg">立即开始</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
