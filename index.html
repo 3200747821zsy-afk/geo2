@@ -3,141 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>极客跳动智算平台 - 完整交互版</title>
+    <title>极客跳动智算平台 - 深度交互系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --geek-green: #86d53b; --geek-dark: #1a1a1a; }
         body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background-color: #f5f7fa; }
+        
+        /* 侧边栏样式 */
         .sidebar-active { background-color: var(--geek-green) !important; color: white !important; font-weight: bold; border-radius: 6px; }
+        .sub-menu { padding: 0.5rem 1rem 0.5rem 3rem; font-size: 0.85rem; color: #666; cursor: pointer; transition: all 0.2s; margin: 2px 12px; }
+        .sub-menu:hover:not(.sidebar-active) { color: var(--geek-green); background-color: #f8fafc; }
+        
+        /* 按钮与卡片 */
         .card-shadow { box-shadow: 0 2px 12px 0 rgba(0,0,0,0.05); }
         .geek-btn { background-color: #1a1a1a; color: white; transition: all 0.3s; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
         .geek-btn:hover { background-color: #333; transform: translateY(-1px); }
         .geek-btn:disabled { background-color: #999; cursor: not-allowed; }
-        .sub-menu { padding: 0.5rem 1rem 0.5rem 3rem; font-size: 0.85rem; color: #666; cursor: pointer; transition: all 0.2s; margin: 2px 12px; }
-        .sub-menu:hover:not(.sidebar-active) { color: var(--geek-green); background-color: #f8fafc; }
+
+        /* 页面切换动画 */
         .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
+        
+        /* 二级界面滑出动画 */
+        #secondary-detail { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(100%); }
+        #secondary-detail.show { transform: translateY(0); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden text-gray-800">
 
-    <aside class="w-64 bg-white border-r flex flex-col flex-shrink-0 z-10">
+    <aside class="w-64 bg-white border-r flex flex-col flex-shrink-0 z-30">
         <div class="p-4 border-b flex items-center space-x-2">
-            <div class="w-8 h-8 bg-[#86d53b] rounded flex items-center justify-center text-white font-bold">G</div>
+            <div class="w-8 h-8 bg-[#86d53b] rounded flex items-center justify-center text-white font-bold text-lg">G</div>
             <span class="font-bold text-sm tracking-tighter">极客跳动智算平台</span>
         </div>
         
         <div class="flex-1 overflow-y-auto no-scrollbar py-2">
             <div class="group">
-                <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer">
-                    <span class="text-xs font-bold flex items-center"><span class="mr-2">🧭</span> GEO 场景速查</span>
-                </div>
-                <div id="nav-dashboard" onclick="switchPage(event, 'page-dashboard')" class="sub-menu sidebar-active">品牌能见度智查</div>
-                <div id="nav-batch" onclick="switchPage(event, 'page-batch')" class="sub-menu">多平台批量查</div>
+                <div class="px-6 py-3 text-xs font-bold flex items-center text-gray-400 uppercase tracking-widest">🧭 GEO 场景速查</div>
+                <div onclick="switchPage(event, 'page-dashboard')" class="sub-menu sidebar-active">品牌能见度智查</div>
+                <div onclick="switchPage(event, 'page-batch')" class="sub-menu">多平台批量查</div>
             </div>
 
-            <div class="group mt-2">
-                <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer">
-                    <span class="text-xs font-bold flex items-center"><span class="mr-2">🔍</span> 提问词管理</span>
-                </div>
-                <div id="nav-mining" onclick="switchPage(event, 'page-mining')" class="sub-menu">提问词挖掘</div>
+            <div class="group mt-4">
+                <div class="px-6 py-3 text-xs font-bold flex items-center text-gray-400 uppercase tracking-widest">🔍 提问词管理</div>
+                <div onclick="switchPage(event, 'page-mining')" class="sub-menu">提问词挖掘</div>
             </div>
 
-            <div class="group mt-2">
-                <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer">
-                    <span class="text-xs font-bold flex items-center"><span class="mr-2">✍️</span> 内容制作</span>
-                </div>
-                <div id="nav-plan" onclick="switchPage(event, 'page-plan')" class="sub-menu">供给计划</div>
+            <div class="group mt-4">
+                <div class="px-6 py-3 text-xs font-bold flex items-center text-gray-400 uppercase tracking-widest">✍️ 内容制作</div>
+                <div onclick="switchPage(event, 'page-plan')" class="sub-menu">供给计划</div>
             </div>
 
-            <div class="group mt-2">
-                <div class="px-6 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer">
-                    <span class="text-xs font-bold flex items-center"><span class="mr-2">🔗</span> AI 引用追踪</span>
-                </div>
-                <div id="nav-trace" onclick="switchPage(event, 'page-trace')" class="sub-menu">上传查询报告</div>
+            <div class="group mt-4">
+                <div class="px-6 py-3 text-xs font-bold flex items-center text-gray-400 uppercase tracking-widest">🔗 AI 引用追踪</div>
+                <div onclick="switchPage(event, 'page-trace')" class="sub-menu">上传查询报告</div>
             </div>
         </div>
+
+        <div class="p-4 border-t text-[10px] text-gray-400 text-center">© 2026 GeekJump Intelligence</div>
     </aside>
 
     <div class="flex-1 flex flex-col overflow-hidden relative">
-        <header class="h-14 bg-white border-b flex items-center justify-end px-8 space-x-4">
-            <div class="flex items-center space-x-2 text-xs">
-                <span class="bg-gray-100 px-2 py-1 rounded text-gray-500">分享得赠金</span>
+        <header class="h-14 bg-white border-b flex items-center justify-end px-8 z-20">
+            <div class="flex items-center space-x-3 text-xs">
+                <span class="bg-green-50 text-green-600 px-2 py-1 rounded">Pro 开发者版本</span>
                 <span class="font-bold text-gray-700">Admin_Geek</span>
-                <div class="w-7 h-7 bg-gray-200 rounded-full"></div>
+                <div class="w-8 h-8 bg-gray-200 rounded-full border-2 border-white shadow-sm"></div>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-10 bg-[#fbfcfd]">
+        <main class="flex-1 overflow-y-auto p-10 bg-[#fbfcfd] relative">
             
-            <div id="page-dashboard" class="page active max-w-6xl mx-auto text-center">
-                <h1 class="text-4xl font-bold mb-4">品牌<span class="text-[#86d53b]">能见度</span>智查</h1>
-                <p class="text-gray-400 mb-10">点击下方按钮，开始扫描多平台 AI 数据</p>
-                <button onclick="refreshDashboard()" class="geek-btn px-12 py-3 rounded text-lg font-bold mb-16">立即执行扫描</button>
+            <div id="page-dashboard" class="page active max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold mb-4">品牌<span class="text-[#86d53b]">能见度</span>智查</h1>
+                    <p class="text-gray-400">实时监测各大 AI 模型对品牌的认知与评价</p>
+                    <button onclick="refreshDashboard()" class="geek-btn mt-8 px-12 py-3 rounded-full font-bold shadow-lg shadow-green-100">立即全网扫描</button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="bg-white p-8 rounded-2xl card-shadow border-t-4 border-[#86d53b]">
-                        <p class="text-xs text-gray-400 mb-4">综合评分</p>
-                        <div id="score-val" class="text-3xl font-bold mb-6">1010</div>
-                        <div id="progress-container" class="space-y-4 text-left text-xs"></div>
+                        <p class="text-[10px] font-bold text-gray-400 mb-4">AI 综合评分</p>
+                        <div id="score-val" class="text-4xl font-bold mb-6">1010</div>
+                        <div id="progress-container" class="space-y-4"></div>
                     </div>
                     <div class="bg-white p-8 rounded-2xl card-shadow">
-                        <canvas id="sourceChart"></canvas>
+                        <p class="text-[10px] font-bold text-gray-400 mb-4">主流信源占比</p>
+                        <div class="h-40 relative"><canvas id="sourceChart"></canvas></div>
                     </div>
                     <div class="bg-white p-8 rounded-2xl card-shadow">
+                        <p class="text-[10px] font-bold text-gray-400 mb-4">实时情绪指数</p>
                         <div id="sentiment-container" class="space-y-6 mt-4"></div>
                     </div>
                 </div>
             </div>
 
-            <div id="page-batch" class="page max-w-5xl mx-auto">
-                <h2 class="text-3xl font-bold text-center mb-6">多平台批量查询</h2>
-                <textarea id="batch-input" class="w-full h-48 p-6 bg-white border rounded-xl outline-none" placeholder="一行一个问题..."></textarea>
-                <button onclick="runBatchQuery()" class="geek-btn mt-4 px-10 py-3 rounded-lg float-right">执行批量任务</button>
-                <div id="batch-results" class="mt-20 space-y-4"></div>
+            <div id="page-batch" class="page max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-2">多平台批量查询</h2>
+                <p class="text-gray-400 mb-8">一次性获取 Kimi, 豆包, 元宝 等多个平台的回答对比</p>
+                <div class="bg-white p-6 rounded-2xl card-shadow">
+                    <textarea id="batch-input" class="w-full h-40 p-4 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-[#86d53b] outline-none text-sm" placeholder="请输入问题，一行一个..."></textarea>
+                    <button onclick="executeTask('batch')" class="geek-btn w-full mt-4 py-4 rounded-xl font-bold text-lg">开始批量执行</button>
+                </div>
             </div>
 
-            <div id="page-mining" class="page max-w-5xl mx-auto">
-                <h2 class="text-2xl font-bold mb-6">提问词挖掘机</h2>
-                <div class="grid grid-cols-2 gap-6 bg-white p-8 rounded-xl shadow-sm">
-                    <input id="mine-input" type="text" class="border p-4 rounded-lg" placeholder="输入核心品类词">
-                    <button onclick="startMining()" class="geek-btn rounded-lg">挖掘潜在热点</button>
-                    <div id="mine-list" class="col-span-2 mt-4 p-4 bg-gray-50 rounded italic text-gray-500">结果将显示在这里...</div>
+            <div id="page-mining" class="page max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-2">提问词挖掘机</h2>
+                <p class="text-gray-400 mb-8">挖掘用户在 AI 搜索时最常使用的长尾关键词</p>
+                <div class="flex gap-4 mb-10">
+                    <input id="mine-input" type="text" class="flex-1 p-4 rounded-xl border-none card-shadow outline-none focus:ring-2 focus:ring-[#86d53b]" placeholder="例如输入：智能家居">
+                    <button onclick="executeTask('mining')" class="geek-btn px-10 rounded-xl font-bold">立即挖掘</button>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded-xl border border-dashed border-gray-200 text-center text-gray-400 italic text-sm">输入关键词后开启深度分析</div>
+                    <div class="bg-white p-6 rounded-xl border border-dashed border-gray-200 text-center text-gray-400 italic text-sm">支持导出 CSV 格式</div>
                 </div>
             </div>
 
             <div id="page-plan" class="page max-w-5xl mx-auto">
-                <h2 class="text-2xl font-bold mb-6">内容供给计划</h2>
-                <div class="bg-white p-8 rounded-xl card-shadow">
-                    <div class="flex justify-between items-center mb-6">
-                        <h4 class="font-bold">2024年度排期表</h4>
-                        <button onclick="generatePlan()" class="geek-btn px-4 py-2 rounded text-sm">生成智能排期</button>
+                <h2 class="text-3xl font-bold mb-6">内容供给计划</h2>
+                <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <span class="font-bold">排期工作台</span>
+                        <button onclick="alert('计划已同步至日历')" class="text-xs bg-gray-100 px-3 py-1 rounded hover:bg-gray-200">同步至企业微信</button>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead><tr class="border-b"><th class="py-2">阶段</th><th class="py-2">关键词</th><th class="py-2">平台</th><th class="py-2">状态</th></tr></thead>
-                            <tbody id="plan-table">
-                                <tr><td colspan="4" class="py-10 text-center text-gray-400">暂无计划数据，请点击生成</td></tr>
-                            </tbody>
-                        </table>
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-[10px] text-gray-400 uppercase">
+                            <tr><th class="px-6 py-4">任务类型</th><th class="px-6 py-4">核心关键词</th><th class="px-6 py-4">状态</th></tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b"><td class="px-6 py-4">长文种草</td><td class="px-6 py-4 font-medium">极客跳动智算测评</td><td class="px-6 py-4 text-green-500">已发布</td></tr>
+                            <tr class="border-b"><td class="px-6 py-4">问答覆盖</td><td class="px-6 py-4 font-medium">如何评价极客智算？</td><td class="px-6 py-4 text-orange-400">进行中</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="page-trace" class="page max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-8">AI 引用追踪</h2>
+                <div onclick="document.getElementById('file-input').click()" class="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-20 cursor-pointer hover:border-[#86d53b] transition-colors group">
+                    <input type="file" id="file-input" class="hidden" onchange="mockUpload()">
+                    <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">📊</div>
+                    <p class="text-gray-500">点击上传 AI 搜索历史报告 (PDF/JSON)</p>
+                    <div id="upload-box" class="mt-6 w-64 mx-auto bg-gray-100 h-2 rounded-full overflow-hidden hidden">
+                        <div id="upload-bar" class="bg-[#86d53b] h-full" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
 
-            <div id="page-trace" class="page max-w-5xl mx-auto">
-                <h2 class="text-2xl font-bold mb-6">AI 引用追踪</h2>
-                <div class="border-2 border-dashed border-gray-200 rounded-2xl p-20 text-center bg-white">
-                    <input type="file" id="file-upload" class="hidden" onchange="handleFileUpload(this)">
-                    <div onclick="document.getElementById('file-upload').click()" class="cursor-pointer">
-                        <div class="text-4xl mb-4">📄</div>
-                        <p id="upload-text" class="text-gray-500">点击或将查询报告拖拽至此上传</p>
-                    </div>
-                    <div id="file-status" class="mt-4 hidden">
-                        <div class="w-full bg-gray-200 h-2 rounded-full"><div id="upload-progress" class="bg-[#86d53b] h-full" style="width: 0%"></div></div>
-                        <p class="text-xs mt-2 text-green-600">正在解析报告内容...</p>
-                    </div>
+            <div id="secondary-detail" class="absolute inset-0 bg-white z-50 p-12 overflow-y-auto hidden">
+                <div class="max-w-4xl mx-auto">
+                    <button onclick="closeDetail()" class="flex items-center text-gray-400 hover:text-black mb-8 transition-colors">
+                        <span class="text-2xl mr-2">←</span> 返回上一级
+                    </button>
+                    <div id="detail-render-area">
+                        </div>
                 </div>
             </div>
 
@@ -145,111 +168,148 @@
     </div>
 
     <script>
-        // 全局图表实例
         let myChart;
 
-        // --- 通用页面切换 ---
+        // --- 核心：页面切换逻辑 ---
         function switchPage(event, pageId) {
+            closeDetail(); // 切换主页面时关闭二级窗
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
+            
             document.querySelectorAll('.sub-menu').forEach(m => m.classList.remove('sidebar-active'));
             if(event) event.currentTarget.classList.add('sidebar-active');
-            if(pageId === 'page-dashboard') initChart();
+            
+            if(pageId === 'page-dashboard') setTimeout(initChart, 100);
         }
 
-        // --- 模块 1: 仪表盘 ---
-        function initChart(data = [40, 30, 30]) {
+        // --- 核心：二级界面控制 ---
+        function executeTask(type) {
+            const inputVal = type === 'mining' ? document.getElementById('mine-input').value : "批量查询指令";
+            if(type === 'mining' && !inputVal) return alert("请输入关键词");
+
+            // 显示加载状态
+            const btn = event.currentTarget;
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "智能引擎分析中...";
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerText = originalText;
+                openDetail(inputVal, type);
+            }, 1000);
+        }
+
+        function openDetail(title, type) {
+            const container = document.getElementById('secondary-detail');
+            const renderArea = document.getElementById('detail-render-area');
+            
+            container.classList.remove('hidden');
+            setTimeout(() => container.classList.add('show'), 10);
+
+            if (type === 'mining') {
+                renderArea.innerHTML = `
+                    <div class="flex items-end justify-between mb-10 border-b pb-6">
+                        <h2 class="text-4xl font-bold">挖掘报告：<span class="text-[#86d53b] underline">${title}</span></h2>
+                        <span class="text-gray-400 text-sm">生成时间：2026-03-20</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8 mb-12">
+                        <div class="bg-gray-50 p-6 rounded-2xl">
+                            <h4 class="font-bold mb-4">🔍 搜索趋势</h4>
+                            <div class="text-xs text-gray-500 space-y-2">
+                                <div class="flex justify-between"><span>相关性评分</span><span class="text-black font-bold">98.2</span></div>
+                                <div class="flex justify-between"><span>全网提及次数</span><span class="text-black font-bold">12.5k</span></div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-2xl">
+                            <h4 class="font-bold mb-4">💡 优化策略</h4>
+                            <p class="text-xs text-gray-600 leading-loose">建议在 AI 回复中通过增强“${title}”的品牌唯一性描述，提升 15% 的引用权重。</p>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-xl mb-4">关联提问词推荐</h3>
+                    <div class="space-y-3">
+                        ${['为什么${title}这么火？', '${title}的替代品有哪些？', '${title}最新测评'].map(q => `
+                            <div class="p-4 bg-white border rounded-xl hover:border-[#86d53b] cursor-pointer transition-colors">${q}</div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                renderArea.innerHTML = `
+                    <h2 class="text-3xl font-bold mb-8">批量任务执行看板</h2>
+                    <div class="space-y-6">
+                        <div class="bg-[#1a1a1a] p-6 rounded-2xl text-white">
+                            <p class="text-xs text-gray-400 mb-2">执行状态</p>
+                            <div class="text-2xl font-bold">任务已完成 (100%)</div>
+                        </div>
+                        <div class="p-6 border rounded-2xl">
+                            <p class="text-sm text-gray-600">已从 3 个 AI 节点捕获到数据。平均响应时间 1.2s。</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function closeDetail() {
+            const container = document.getElementById('secondary-detail');
+            container.classList.remove('show');
+            setTimeout(() => container.classList.add('hidden'), 400);
+        }
+
+        // --- 模块逻辑：能见度图表 ---
+        function initChart() {
             const ctx = document.getElementById('sourceChart');
             if(!ctx) return;
             if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
+            myChart = new Chart(ctx.getContext('2d'), {
                 type: 'doughnut',
-                data: { labels: ['社媒', '官网', '新闻'], datasets: [{ data: data, backgroundColor: ['#86d53b', '#6366f1', '#e5e7eb'] }] },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                data: {
+                    labels: ['社媒', '官网', '新闻'],
+                    datasets: [{ data: [46, 34, 20], backgroundColor: ['#86d53b', '#1a1a1a', '#e5e7eb'], borderWidth: 0, cutout: '80%' }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
         function refreshDashboard() {
-            // 模拟随机刷新
-            document.getElementById('score-val').innerText = Math.floor(Math.random()*500 + 800);
-            initChart([Math.random()*100, Math.random()*100, Math.random()*100]);
-            updateProgress();
-            updateSentiment();
+            document.getElementById('score-val').innerText = "计算中...";
+            setTimeout(() => {
+                document.getElementById('score-val').innerText = Math.floor(Math.random()*200 + 900);
+                updateProgress();
+                updateSentiment();
+                initChart();
+            }, 800);
         }
 
         function updateProgress() {
             const container = document.getElementById('progress-container');
             container.innerHTML = `
-                <div class="flex justify-between"><span>腾讯元宝</span><span>${Math.floor(Math.random()*30+70)}%</span></div>
-                <div class="bg-gray-100 h-1 rounded-full"><div class="bg-[#86d53b] h-full" style="width: 80%"></div></div>
-                <div class="flex justify-between"><span>字节豆包</span><span>${Math.floor(Math.random()*30+65)}%</span></div>
-                <div class="bg-gray-100 h-1 rounded-full"><div class="bg-blue-400 h-full" style="width: 75%"></div></div>
+                <div class="flex justify-between text-xs"><span>元宝 (腾讯)</span><span class="font-bold">88%</span></div>
+                <div class="w-full bg-gray-100 h-1 rounded-full"><div class="bg-[#86d53b] h-full" style="width: 88%"></div></div>
+                <div class="flex justify-between text-xs"><span>豆包 (字节)</span><span class="font-bold">76%</span></div>
+                <div class="w-full bg-gray-100 h-1 rounded-full"><div class="bg-blue-400 h-full" style="width: 76%"></div></div>
             `;
         }
 
         function updateSentiment() {
             const container = document.getElementById('sentiment-container');
-            container.innerHTML = `<div class="text-xs">正面情绪: ${Math.floor(Math.random()*50+50)}%</div><div class="bg-green-100 h-4 rounded w-full"></div>`;
+            container.innerHTML = `
+                <div><div class="flex justify-between text-[10px] mb-1"><span>正面 🥳</span><span>65%</span></div><div class="w-full bg-gray-50 h-1.5 rounded-full overflow-hidden"><div class="bg-green-400 w-[65%] h-full"></div></div></div>
+                <div><div class="flex justify-between text-[10px] mb-1"><span>中立 😐</span><span>35%</span></div><div class="w-full bg-gray-50 h-1.5 rounded-full overflow-hidden"><div class="bg-gray-300 w-[35%] h-full"></div></div></div>
+            `;
         }
 
-        // --- 模块 2: 批量查询 ---
-        function runBatchQuery() {
-            const input = document.getElementById('batch-input').value;
-            if(!input) return alert("请输入内容");
-            const res = document.getElementById('batch-results');
-            res.innerHTML = "正在检索中...";
-            setTimeout(() => {
-                res.innerHTML = input.split('\n').map(q => `<div class="bg-white p-4 rounded shadow-sm">分析问题: ${q} <br> <span class="text-[#86d53b] text-xs">● 已完成 AI 响应捕获</span></div>`).join('');
-            }, 1000);
-        }
-
-        // --- 模块 3: 挖掘 ---
-        function startMining() {
-            const val = document.getElementById('mine-input').value;
-            const list = document.getElementById('mine-list');
-            list.innerHTML = "挖掘中...";
-            setTimeout(() => {
-                list.innerHTML = `• ${val} 的优缺点分析<br>• 2024年${val}市场趋势报告`;
-            }, 800);
-        }
-
-        // --- 模块 4: 供给计划 (新) ---
-        function generatePlan() {
-            const table = document.getElementById('plan-table');
-            const data = [
-                { stage: "预热期", key: "性能对比", plat: "小红书", status: "执行中" },
-                { stage: "爆发期", key: "品牌故事", plat: "知乎", status: "待启动" }
-            ];
-            table.innerHTML = data.map(d => `
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="py-3">${d.stage}</td><td>${d.key}</td><td>${d.plat}</td>
-                    <td><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-[10px]">${d.status}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        // --- 模块 5: 引用追踪 (新) ---
-        function handleFileUpload(input) {
-            if(!input.files[0]) return;
-            const status = document.getElementById('file-status');
-            const text = document.getElementById('upload-text');
-            const progress = document.getElementById('upload-progress');
-            
-            status.classList.remove('hidden');
-            text.innerText = "上传文件: " + input.files[0].name;
-
+        function mockUpload() {
+            const box = document.getElementById('upload-box');
+            const bar = document.getElementById('upload-bar');
+            box.classList.remove('hidden');
             let w = 0;
             const timer = setInterval(() => {
-                w += 10;
-                progress.style.width = w + "%";
-                if(w >= 100) {
-                    clearInterval(timer);
-                    alert("报告解析完成！已同步至 AI 引用数据库。");
-                }
-            }, 100);
+                w += 5;
+                bar.style.width = w + "%";
+                if(w >= 100) { clearInterval(timer); alert('上传成功！'); box.classList.add('hidden'); }
+            }, 50);
         }
 
-        // 默认初始化
         window.onload = () => {
             initChart();
             updateProgress();
