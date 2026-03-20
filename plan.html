@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>极客跳动 - 内容制作</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --geek-green: #86d53b; }
+        .sidebar-active { background-color: var(--geek-green) !important; color: white !important; font-weight: bold; border-radius: 6px; }
+        .sub-menu { padding: 0.5rem 1rem 0.5rem 3rem; font-size: 0.85rem; color: #666; display: block; margin: 2px 12px; text-decoration: none; transition: 0.2s; }
+        .sub-menu:hover:not(.sidebar-active) { color: var(--geek-green); background-color: #f8fafc; border-radius: 6px; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800 bg-[#fbfcfd]">
+    <aside class="w-64 bg-white border-r flex flex-col flex-shrink-0">
+        <div class="p-4 border-b font-bold text-sm text-[#86d53b]">极客跳动智算平台</div>
+        <div class="flex-1 py-2">
+            <div class="px-6 py-3 text-xs font-bold text-gray-400">🧭 场景速查</div>
+            <a href="index.html" class="sub-menu">品牌能见度智查</a>
+            <div class="px-6 py-3 text-xs font-bold text-gray-400">✍️ 内容制作</div>
+            <a href="plan.html" class="sub-menu sidebar-active">供给计划</a>
+            <div class="px-6 py-3 text-xs font-bold text-gray-400">🔗 引用追踪</div>
+            <a href="trace.html" class="sub-menu">上传查询报告</a>
+        </div>
+    </aside>
+    <main class="flex-1 p-10">
+        <h1 class="text-3xl font-bold mb-8">内容<span class="text-[#86d53b]">供给计划</span></h1>
+        <div class="bg-white p-10 rounded-2xl shadow-sm border-t-4 border-[#86d53b]">
+            <p class="text-gray-500 mb-6">基于 AI 洞察，自动生成高质量 GEO 内容公式</p>
+            <div class="flex space-x-4">
+                <input type="text" placeholder="输入核心关键词..." class="flex-1 border p-3 rounded-lg outline-none focus:ring-1 focus:ring-[#86d53b]">
+                <button class="bg-black text-white px-8 py-3 rounded-lg font-bold">新建计划</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
